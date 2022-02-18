@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="resources">
+    <file alias="numbers">numbers.png</file>
+    <file alias="back">slot_back-b.png</file>
+  </qresource>
+</RCC>
