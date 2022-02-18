@@ -1,3 +1,3 @@
 slate = """
-            border-image: url('./images/slot_back-b.png');
+            border-image: url('./slot_back-b.png');
 """
