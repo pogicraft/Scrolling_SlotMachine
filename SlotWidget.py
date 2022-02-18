@@ -18,11 +18,11 @@ class SlotDigit(QGraphicsItemGroup):
         self.updater.connect(SIGNAL('timeout()'), self.nudge_step)
         self.updater.start(10)
         
-        self.back = QGraphicsPixmapItem(QPixmap('./images/slot_digitback.png').scaledToHeight(400))
+        self.back = QGraphicsPixmapItem(QPixmap('./slot_digitback.png').scaledToHeight(400))
         self.back.setFlags(QGraphicsItem.ItemClipsChildrenToShape)
         self.addToGroup(self.back)
         
-        self.image = QGraphicsPixmapItem(QPixmap('./images/numbers.png').scaledToWidth(self.image_width))
+        self.image = QGraphicsPixmapItem(QPixmap('./numbers.png').scaledToWidth(self.image_width))
         self.image.setParentItem(self.back)
         self.image.setPos(-20, self.image_width / 10)
         
