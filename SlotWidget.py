@@ -32,17 +32,20 @@ class SlotDigit(QGraphicsItemGroup):
         self.target += delta_insert
         
     def nudge_step(self):
+        if self.position > 10:
+            self.position -= 10
+            self.target -= 10
+        elif self.position < 0:
+            self.position += 10
+            self.target += 10
         delta_num = self.target - self.position
         if delta_num != 0:
-            self.position += (delta_num / abs(delta_num))
-            if self.position > 10:
-                self.position -= 10
-                self.target -= 10
-            elif self.position < 0:
-                self.position += 10
-                self.target += 10
+            if abs(delta_num) < .2:
+                self.position = round(self.position)
+            else:
+                self.position += (delta_num / abs(delta_num)) / 15
             self.image.setPos(self.image.x(), -self.position * self.gap + 30)
-        
+            
     def wheelEvent(self, event):
         self.target += int(event.delta() / abs(event.delta()))
 
