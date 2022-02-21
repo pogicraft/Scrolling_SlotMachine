@@ -99,11 +99,21 @@ class SlotMachine(QGraphicsView):
                 else:
                     self.items[each-1].carry_out += 1
                     self.items[each].carry_out = 0
-app = QApplication(sys.argv)
-window = QMainWindow()
+                    
+    def toggle_carry(self):
+        if self.carry:
+            self.carry = False
+        else:
+            self.carry = True
+            
 
-box = SlotMachine(window)
-window.setCentralWidget(box)
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    window = QMainWindow()
+    
+    box = SlotMachine(window)
+    window.setCentralWidget(box)
+    
+    window.show()
+    sys.exit(app.exec_())
 
-window.show()
-sys.exit(app.exec_())
