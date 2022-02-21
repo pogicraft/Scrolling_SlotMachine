@@ -6,6 +6,8 @@ import stylesheet
 
 
 class SlotDigit(QGraphicsItemGroup):
+    carry_out = 0
+    
     def __init__(self, parent=None):
         super().__init__(parent)
         
@@ -32,12 +34,6 @@ class SlotDigit(QGraphicsItemGroup):
         self.target += delta_insert
         
     def nudge_step(self):
-        if self.position > 10:
-            self.position -= 10
-            self.target -= 10
-        elif self.position < 0:
-            self.position += 10
-            self.target += 10
         delta_num = self.target - self.position
         if delta_num != 0:
             if abs(delta_num) < .2:
@@ -45,7 +41,15 @@ class SlotDigit(QGraphicsItemGroup):
             else:
                 self.position += (delta_num / abs(delta_num)) / 15
             self.image.setPos(self.image.x(), -self.position * self.gap + 30)
-            
+        if self.position >= 10:
+            self.position -= 10
+            self.target -= 10
+            self.carry_out += 1
+        elif self.position < 0:
+            self.position += 10
+            self.target += 10
+            self.carry_out -= 1
+        
     def wheelEvent(self, event):
         self.target += int(event.delta() / abs(event.delta()))
 
@@ -56,13 +60,14 @@ def print_this(string):
 
 class SlotMachine(QGraphicsView):
     shout = Signal(str)
+    carry = False
+    items = []
     
     def __init__(self, parent=None):
         super().__init__(parent)
         
         self.setStyleSheet(stylesheet.slate)
         self.setMaximumSize(1800, 900)
-        self.items = []
         
         self.scene_1 = QGraphicsScene()
         self.scene_1.setSceneRect(QRectF(-40, -40, 1290, 500))
@@ -73,20 +78,27 @@ class SlotMachine(QGraphicsView):
         self.setScene(self.scene_1)
         self.installEventFilter(self)
         self.shout.connect(print_this)
+
         
     def eventFilter(self, obj, event):
         if event.type() == QEvent.MouseButtonPress:
-            output = []
-            for each in range(len(self.items)):
-                number = self.items[each].position
-                if number == 10:
-                    number = 0
-                output.append(number)
-            integer = "".join([str(int(each)) for each in output])
+            integer = "".join([str(int(each.position)) for each in self.items])
             self.shout.emit(integer)
+        elif self.carry:
+            self.check_carry()
         return False
 
-
+    def check_carry(self):
+        temp = [each.carry_out for each in self.items]
+        for each in range(len(temp)):
+            if each > 0 and self.items[each].carry_out != 0:
+                temp = self.items[each-1].position + self.items[each].carry_out
+                if temp > 0:
+                    self.items[each-1].target = temp
+                    self.items[each].carry_out = 0
+                else:
+                    self.items[each-1].carry_out += 1
+                    self.items[each].carry_out = 0
 app = QApplication(sys.argv)
 window = QMainWindow()
 
