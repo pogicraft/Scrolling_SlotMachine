@@ -92,21 +92,21 @@ class SlotMachine(QGraphicsView):
         temp = [each.carry_out for each in self.items]
         for each in range(len(temp)):
             if each > 0 and self.items[each].carry_out != 0:
-                temp = self.items[each-1].position + self.items[each].carry_out
-                if temp > 0:
-                    self.items[each-1].target = temp
-                    self.items[each].carry_out = 0
+                temp_dig = self.items[each - 1].position + self.items[each].carry_out
+                if temp_dig < 0:
+                    self.items[each - 1].carry_out -= 1
+                    self.items[each - 1].target = temp_dig + 10
                 else:
-                    self.items[each-1].carry_out += 1
-                    self.items[each].carry_out = 0
+                    self.items[each - 1].target = temp_dig
+                self.items[each].carry_out = 0
                     
     def toggle_carry(self):
         if self.carry:
             self.carry = False
         else:
             self.carry = True
+        
             
-
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = QMainWindow()
@@ -116,4 +116,3 @@ if __name__ == '__main__':
     
     window.show()
     sys.exit(app.exec_())
-
