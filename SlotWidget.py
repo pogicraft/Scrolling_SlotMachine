@@ -16,8 +16,8 @@ class SlotDigit(QGraphicsItemGroup):
         self.step = 0
         self.image_width = 300
         self.gap = self.image_width * 54 / 30
-        self.updater = QTimer()
-        self.updater.connect(SIGNAL('timeout()'), self.nudge_step)
+        self.updater = QTimer(self)
+        self.updater.timeout.connect(self.nudge_step)
         self.updater.start(10)
         
         back_image = QPixmap("./slot_digitback.png").scaledToHeight(400)
